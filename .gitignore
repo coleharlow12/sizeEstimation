@@ -1,3 +1,7 @@
-#Ignore MAC file system files
+ls#Ignore MAC file system files
 .mac
 .DS_store
+
+
+#Stops the virtual environment from being uploaded
+venv/
