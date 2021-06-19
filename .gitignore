@@ -1,0 +1,3 @@
+#Ignore MAC file system files
+.mac
+.DS_store
