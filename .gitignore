@@ -5,3 +5,9 @@ ls#Ignore MAC file system files
 
 #Stops the virtual environment from being uploaded
 venv/
+
+#Stops jpgs being uploaded
+.jpg
+
+#Stops Calibration omg folder being uploaded
+calImgIphone/
