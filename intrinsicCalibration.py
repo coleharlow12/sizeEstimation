@@ -1,6 +1,9 @@
 import numpy as np
 import cv2 as cv
 import glob
+import pickle
+import matplotlib.pyplot as plt
+import pdb
 
 # termination criteria
 # Stops if the specified accuracy (epsilon) is met
@@ -12,12 +15,29 @@ squareSZ = 23.876 #Square edge length in mm
 objp = np.zeros((6*9,3), np.float32)
 objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2)*squareSZ
 
+print(objp.shape)
+
+# Plots the object points
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+ax.scatter(objp[:,0],objp[:,1],objp[:,2])
+
+ax.set_xlabel('x-axis')
+ax.set_ylabel('y-axis')
+ax.set_zlabel('z-axis')
+
+for i in np.arange(0,objp.shape[0]):
+	ax.text(objp[i,0],objp[i,1],objp[i,2],i)
+
+#plt.show()
+
+#pdb.set_trace()
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
 
 #Gets all the jpg filenames in the callImgIphone directory
-images = glob.glob('calImgIphone/*.jpg') 
+images = glob.glob('goProCal3/*.JPG') 
 
 print('Loaded Images')
 
@@ -51,11 +71,18 @@ cv.destroyAllWindows()
 # rvecs: For each image this gives the rotations to go from the object coordinate space to the camera coordinate space
 # tvecs: For each image this gives the translations  '      '
 ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+rvecs = np.array(rvecs)
+tvecs = np.array(tvecs)
+print(rvecs.shape)
+print(tvecs.shape)
+#pdb.set_trace()
 
-print(ret.shape)
+# Saves the Camera Matrix from Calibration
+filename = "cameraMatrix_GoPro.sav"
+pickle.dump(mtx,open(filename,'wb'))
 
 # Tests the calibration on a new image
-img = cv.imread('IMG_9135.jpg')
+img = cv.imread('GOPR01.jpg')
 h, w = img.shape[:2]
 newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
 
